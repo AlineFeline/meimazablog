@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+
+  wordpress:
+    container_name: mm_wordpress
+    depends_on:
+      - db
+    image: wordpress:4.7.1
+    restart: always
+    volumes:
+      - ./web/wp-content:/var/www/html/wp-content
+      - ./php.ini:/var/www/html/php.ini
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_PASSWORD: password01
+    ports:
+      - 81:80
+      - 443:443
+
+  db:
+    container_name: mm_mysql
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - ./data/dev:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password01
+
+  phpmyadmin:
+    container_name: mm_phpmyadmin
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password01
+ 
